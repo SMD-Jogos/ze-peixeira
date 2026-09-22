@@ -76,7 +76,7 @@ Cada passo traz o que o humano faz, o que o agente faz e o que conferir. Os bloc
 
 3. Instalar e autenticar o agente escolhido.
 
-> **Registro da execução.** Versões usadas: Godot ___ · Spec Kit ___ · GUT ___ · agente ___ (modelo ___).
+> **Registro da execução.** Versões usadas: Godot 4.7.2.stable.official · Spec Kit 1.0.10 · GUT 9.7.1 · agente Claude Code (modelo Sonnet 5).
 
 ### Passo 1 — Criar o repositório e iniciar o Spec Kit
 

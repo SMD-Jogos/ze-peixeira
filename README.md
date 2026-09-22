@@ -23,10 +23,10 @@ O fluxo foi **executado com o Claude Code** e pensado para ser independente do a
 
 | Ferramenta | Versão |
 |---|---|
-| Godot | ___ |
-| Spec Kit (`specify`) | ___ |
-| GUT | ___ |
-| Agente e modelo | Claude Code, ___ |
+| Godot | 4.7.2.stable.official |
+| Spec Kit (`specify`) | 1.0.10 |
+| GUT | 9.7.1 |
+| Agente e modelo | Claude Code, Sonnet 5 |
 
 ## Fatias
 
