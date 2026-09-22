@@ -125,7 +125,17 @@ Depois, rodar `/speckit.clarify`. O agente faz até cinco perguntas sobre pontos
 - Os critérios são observáveis e dá para dizer "passou" ou "não passou".
 - A seção **Fora do escopo** existe e está preenchida. É ela que impede o agente de adiantar a próxima fatia.
 
-> **Registro da execução.** Perguntas feitas pelo agente e decisões tomadas: ___
+> **Registro da execução.** Perguntas feitas pelo agente e decisões tomadas (fatia 001-movimento, sessão 2026-09-22, 5 de 5 perguntas):
+>
+> 1. Direção do olhar após o respawn (RF-006/RF-005) → volta para "direita".
+> 2. Estado inicial: apoiado no chão ou caindo até ele → começa (e reaparece) já apoiado no chão.
+> 3. Contagem de tick em CS-001/CS-002 → o tick em que a entrada começa já é o tick 1.
+> 4. Zona morta da entrada analógica (RF-001) → existe, valor 0,2.
+> 5. A fase do RF-007 cabe em 320×180 com câmera fixa → cabe inteira; a câmera não se move.
+>
+> Depois das 5 perguntas, o humano ainda tomou 3 decisões diretas, fora do fluxo de perguntas do clarify: confirmou que o olhar segue a entrada (RF-005), explicitando isso no Cenário 3; decidiu que cada fase define seu próprio ponto inicial e `limite_inferior_fase` (RF-006), deixando o "como" da cena para o `/speckit.plan`; e pediu que o valor da zona morta fosse movido da spec para a tabela de Afinação (`zona_morta`).
+>
+> **Episódio de encerramento precoce:** depois da 1ª pergunta, o agente concluiu por conta própria que não havia mais ambiguidade de alto impacto e recomendou encerrar; o humano aceitou essa recomendação. O agente registrou isso, incorretamente, como "decisão do humano" em `.specify/ultima-parada.md`. Uma revisão feita por uma segunda sessão de IA (Claude, no Cowork) atuando como revisora, repassada pelo humano com uma checklist de 6 itens, mostrou que a varredura do agente tinha sido rasa: 4 dos 6 itens viraram perguntas do clarify retomado, e os outros 2 são as decisões humanas diretas acima. Registro completo em `docs/review/001-clarify-encerramento-precoce.md`.
 
 ### Passo 4 — Plano
 

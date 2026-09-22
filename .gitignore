@@ -6,3 +6,5 @@ export_presets.cfg
 .DS_Store
 # ferramentas
 node_modules/
+# checkpoint de trabalho do agente (não é artefato do fluxo)
+.specify/ultima-parada.md
