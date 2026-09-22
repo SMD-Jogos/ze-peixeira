@@ -37,7 +37,7 @@ O Zé corre com aceleração/desaceleração, cai com gravidade e é contido pel
 | 1.1–1.2 Godot 4.x, GDScript tipado, sem API do Godot 3 | `CharacterBody2D` + `velocity`/`move_and_slide()` sem argumentos; `@export`/`@onready`; nenhuma API listada como proibida é usada |
 | 1.3 Física a 60 ticks/s | Valor padrão do motor — confirmado em `game/project.godot` (não precisou de override; ver Passo 0/1) |
 | 2.1 Regras em classes puras (`RefCounted`, sem nó/física/`Input`) | 5 classes em `game/scripts/regras/` (ver Project Structure); recebem `no_chao` e os valores de `PlayerTuning` por parâmetro |
-| 2.2 Nó só orquestra | `jogador.gd` lê `Input`, chama as regras, aplica `velocity`, chama `move_and_slide()`; nenhum número mágico ou decisão no nó |
+| 2.2 Nó só orquestra | `jogador.gd` lê `Input`, chama as regras, aplica `velocity`, chama `move_and_slide()`; nenhum número mágico ou decisão no nó. `fase.gd` também só orquestra: consulta `RegraReaparecimento` e chama `jogador.reaparecer()`, sem acessar nós internos do jogador nem decidir a lógica de reaparecimento |
 | 2.3 Afinação em dados | `PlayerTuning` (`game/scripts/data/player_tuning.gd`) ganha o campo `zona_morta` (decisão humana pós-clarify); nenhum literal de movimento fora do recurso |
 | 2.4 Entrada por ações nomeadas | Só `mover_esquerda`/`mover_direita` são lidas nesta fatia; `mover_cima`/`mover_baixo`/`pular`/`dash`/`arremessar`/`cortar` existem no mapa (Passo 0/1) mas não são lidas — reservadas para fatias futuras |
 | 2.5 Comunicação por sinais | Não se aplica nesta fatia: não há objeto de mundo (espinho, mandacaru, peixeira — todos fora do escopo). A colisão com parede é resolvida pelo `move_and_slide()` do próprio motor, sem sinal customizado |
@@ -79,11 +79,11 @@ game/
 │   │   ├── movimento_horizontal.gd   # RF-002, RF-003 (CS-001, CS-002)
 │   │   ├── queda.gd                  # RF-004 (CS-003)
 │   │   ├── direcao_olhar.gd          # RF-005 (Cenário 3) — recebe a entrada já discretizada por EntradaHorizontal, nunca o valor bruto
-│   │   └── respawn.gd                # RF-006, RF-008
+│   │   └── reaparecimento.gd         # RF-006, RF-008 (renomeado de respawn.gd/RegraRespawn — achado C1 do /speckit.analyze, constituição 5.4)
 │   ├── data/
 │   │   └── player_tuning.gd          # class_name PlayerTuning (inclui zona_morta)
 │   └── mundo/
-│       └── fase.gd                   # @export limite_inferior_fase; ponto inicial via Marker2D
+│       └── fase.gd                   # @export limite_inferior_fase; ponto inicial via Marker2D; orquestra o reaparecimento (decisão do humano — ver abaixo)
 ├── data/
 │   └── player_tuning.tres            # instância de PlayerTuning
 └── tests/
@@ -93,6 +93,10 @@ game/
 **Structure Decision**: projeto único (`game/`), sem separação backend/frontend — é um jogo Godot. A separação relevante é a da constituição (regras puras vs. nó de orquestração vs. dados de afinação), não uma estrutura de camadas de aplicação.
 
 **Ordem de composição em `jogador.gd` (`_physics_process`)**: `jogador.gd` lê o valor bruto de `Input`, chama `EntradaHorizontal.arredondar(bruto, tuning.zona_morta)` primeiro, e só então passa o resultado já discretizado (−1/0/1) para `MovimentoHorizontal.atualizar_velocidade` **e** para `DirecaoOlhar.atualizar`. `DirecaoOlhar` nunca recebe o valor bruto do analógico — evita que a classe de direção do olhar precise repetir a lógica de zona morta do RF-001, e mantém cada regra com uma única responsabilidade.
+
+**Direção do olhar é só visual, nunca no corpo físico** (decisão do humano): a transformação de direção (ex.: `scale.x`) é aplicada apenas no nó visual (`ColorRect`), filho do `CharacterBody2D` — nunca no `CharacterBody2D` em si, porque escala negativa num corpo físico espelharia também a `CollisionShape2D` (constituição 3.1: a colisão tem forma própria, não derivada do visual). O placeholder do Zé ganha um "olho" (retângulo pequeno e escuro, 2×2 px), filho do nó visual, para que a mudança de direção seja observável mesmo com o retângulo principal sendo simétrico.
+
+**Reaparecimento é orquestrado por `fase.gd`, não por `jogador.gd`** (decisão do humano, invertendo o desenho inicial deste plano): a cada tick, `fase.gd` consulta `RegraReaparecimento.deve_reaparecer` com o `global_position.y` do Zé e seu próprio `limite_inferior_fase`; se verdadeiro, chama `jogador.reaparecer(posicao: Vector2)`. `jogador.gd` expõe esse método (zera `velocity`, define `direcao_olhar = 1`, aplica a posição recebida) e não acessa nenhum nó da fase — só recebe a posição já resolvida por parâmetro. O `_ready()` de `fase.gd` chama o mesmo `jogador.reaparecer()` para cobrir o RF-008 no início da fase. `global_position` é usado dos dois lados (nunca `position` local), já que `jogador.tscn` é instanciado dentro de `fase_teste.tscn`.
 
 ## Padrões de projeto (Nystrom)
 
@@ -114,14 +118,16 @@ Por constituição 4.3, os testes exercitam as classes de `game/scripts/regras/`
 
 Os testes simulam ticks com `delta = 1.0 / 60.0` e comparam velocidades com `assert_almost_eq` (tolerância — os valores intermediários envolvem ponto flutuante, ex.: 16,7, 33,3, 83,3 px/s). Igualdade exata (`assert_eq`) só é usada onde a própria regra garante um valor exato "redondo": a velocidade em `corrida_max` no tick 6 (CS-001) e a velocidade zero no tick 6 da frenagem (CS-002) — a "aproximação nunca ultrapassa o alvo" (RF-002) é precisamente o que torna esses dois pontos exatos, não aproximados.
 
-| RF/CS | Classe exercitada | Testes (nomes ilustrativos, definidos no `/speckit.tasks`) |
+O `before_each()` de `game/tests/test_001_movimento.gd` constrói um `PlayerTuning.new()` e atribui os 7 campos manualmente com os valores de partida da spec — **nunca** carrega `game/data/player_tuning.tres` — para que ajustes de playtest no `.tres` não quebrem os testes.
+
+| RF/CS | Classe exercitada | Testes (nomes definidos no `/speckit.tasks`) |
 |---|---|---|
-| RF-001 | `EntradaHorizontal.arredondar` | `test_rf001_abaixo_da_zona_morta_vira_zero`, `test_rf001_acima_da_zona_morta_arredonda_para_sinal` |
-| RF-002, CS-001, CS-002 | `MovimentoHorizontal.atualizar_velocidade` | `test_rf002_acelera_ate_corrida_max`, `test_cs001_atinge_corrida_max_no_tick_6`, `test_cs002_para_no_tick_6_sem_trocar_sinal` |
+| RF-001 | `EntradaHorizontal.arredondar` | `test_rf001_abaixo_da_zona_morta_vira_zero`, `test_rf001_acima_da_zona_morta_arredonda_para_sinal`, `test_rf001_ambas_direcoes_resultam_zero` |
+| RF-002, CS-001, CS-002 | `MovimentoHorizontal.atualizar_velocidade` | `test_rf002_acelera_ate_corrida_max`, `test_rf002_reduz_com_corrida_reducao_acima_do_maximo`, `test_cs001_atinge_corrida_max_no_tick_6`, `test_cs002_para_no_tick_6_sem_trocar_sinal` |
 | RF-003 | `MovimentoHorizontal.atualizar_velocidade` (com `no_chao = false`) | `test_rf003_multiplicador_ar_reduz_taxa` |
 | RF-004, CS-003 | `Queda.atualizar_velocidade_vertical` | `test_rf004_gravidade_acumula_por_tick`, `test_cs003_nunca_ultrapassa_queda_max` |
-| RF-005 (Cenário 3) | `DirecaoOlhar.atualizar` | `test_rf005_muda_no_tick_em_que_a_entrada_muda_de_sinal` |
-| RF-006, RF-008 | `RegraRespawn.deve_reaparecer` | `test_rf006_reaparece_abaixo_do_limite`, `test_rf008_estado_apos_respawn_e_no_inicio` |
+| RF-005 (Cenário 3) | `DirecaoOlhar.atualizar` | `test_rf005_muda_no_tick_em_que_a_entrada_muda_de_sinal`, `test_rf005_mantem_direcao_com_entrada_zero` |
+| RF-006, RF-008 | `RegraReaparecimento.deve_reaparecer` | `test_rf006_reaparece_abaixo_do_limite`, `test_rf008_estado_apos_reaparecer_e_no_inicio` |
 | RF-007 | — (é layout de cena, não regra pura) | Verificado no playtest manual (`quickstart.md`), não por teste GUT |
 | CS-004 | — (é uma verificação de convenção, não uma regra) | Conferido na revisão humana do diff: todo RF acima tem teste com o identificador no nome |
 
