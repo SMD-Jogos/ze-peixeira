@@ -1,0 +1,8 @@
+{
+  "name": "apostila-ze-peixeira",
+  "private": true,
+  "description": "Gera docs/apostila-sdd-ze-peixeira.docx a partir dos arquivos Markdown do repositório",
+  "dependencies": {
+    "docx": "^9.6.1"
+  }
+}
