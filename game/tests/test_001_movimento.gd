@@ -66,6 +66,20 @@ func test_cs002_para_no_tick_6_sem_trocar_sinal():
 	v = MovimentoHorizontal.atualizar_velocidade(v, 0, true, TICK, tuning)
 	assert_almost_eq(v, 0.0, 0.001, "tick 6 deve parar exatamente, sem trocar de sinal")
 
+func test_rf003_multiplicador_ar_reduz_taxa():
+	# Ramo de aceleração (corrida_aceleracao): incremento no ar deve ser
+	# exatamente multiplicador_ar vezes o incremento no chão, no mesmo tick.
+	var chao_aceleracao := MovimentoHorizontal.atualizar_velocidade(0.0, 1, true, TICK, tuning)
+	var ar_aceleracao := MovimentoHorizontal.atualizar_velocidade(0.0, 1, false, TICK, tuning)
+	assert_almost_eq(ar_aceleracao, chao_aceleracao * tuning.multiplicador_ar, 0.001, "incremento no ar = multiplicador_ar * incremento no chão (aceleração)")
+
+	# Ramo de redução (corrida_reducao): mesma proporção, com |v| > corrida_max
+	# no mesmo sentido da entrada (estado contrivado, possível com dash em fatia futura).
+	var v_inicial := 120.0
+	var chao_reducao := MovimentoHorizontal.atualizar_velocidade(v_inicial, 1, true, TICK, tuning) - v_inicial
+	var ar_reducao := MovimentoHorizontal.atualizar_velocidade(v_inicial, 1, false, TICK, tuning) - v_inicial
+	assert_almost_eq(ar_reducao, chao_reducao * tuning.multiplicador_ar, 0.001, "incremento no ar = multiplicador_ar * incremento no chão (redução)")
+
 # RF-004, CS-003
 
 func test_rf004_gravidade_acumula_por_tick():
