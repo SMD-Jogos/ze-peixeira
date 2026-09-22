@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PlayerTuning" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/player_tuning.gd" id="1_0ckyy"]
+
+[resource]
+script = ExtResource("1_0ckyy")
+corrida_max = 90.0
+corrida_aceleracao = 1000.0
+corrida_reducao = 400.0
+multiplicador_ar = 0.65
+gravidade = 900.0
+queda_max = 160.0
+zona_morta = 0.2

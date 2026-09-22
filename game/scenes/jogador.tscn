@@ -1,9 +1,14 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/jogador/jogador.gd" id="1_uahlj"]
+[ext_resource type="Resource" path="res://data/player_tuning.tres" id="2_g1ob3"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sa8d0"]
 size = Vector2(8, 11)
 
 [node name="Jogador" type="CharacterBody2D" unique_id=1842407644]
+script = ExtResource("1_uahlj")
+tuning = ExtResource("2_g1ob3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=407014129]
 shape = SubResource("RectangleShape2D_sa8d0")
