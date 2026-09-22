@@ -80,6 +80,16 @@ func test_rf003_multiplicador_ar_reduz_taxa():
 	var ar_reducao := MovimentoHorizontal.atualizar_velocidade(v_inicial, 1, false, TICK, tuning) - v_inicial
 	assert_almost_eq(ar_reducao, chao_reducao * tuning.multiplicador_ar, 0.001, "incremento no ar = multiplicador_ar * incremento no chão (redução)")
 
+# RF-005 (Cenário 3)
+
+func test_rf005_muda_no_tick_em_que_a_entrada_muda_de_sinal():
+	assert_eq(DirecaoOlhar.atualizar(1, -1), -1, "muda para esquerda assim que a entrada é -1")
+	assert_eq(DirecaoOlhar.atualizar(-1, 1), 1, "muda para direita assim que a entrada é 1")
+
+func test_rf005_mantem_direcao_com_entrada_zero():
+	assert_eq(DirecaoOlhar.atualizar(1, 0), 1, "mantém direita com entrada 0")
+	assert_eq(DirecaoOlhar.atualizar(-1, 0), -1, "mantém esquerda com entrada 0")
+
 # RF-004, CS-003
 
 func test_rf004_gravidade_acumula_por_tick():
