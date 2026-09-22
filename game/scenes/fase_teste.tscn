@@ -1,0 +1,94 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/jogador.tscn" id="1_8ki4h"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_py3y8"]
+size = Vector2(130, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6pgwp"]
+size = Vector2(160, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1ys6m"]
+size = Vector2(40, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i5xpt"]
+size = Vector2(40, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g1i5j"]
+size = Vector2(10, 60)
+
+[node name="FaseTeste" type="Node2D" unique_id=1821665528]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=196667189]
+position = Vector2(160, 90)
+
+[node name="PontoInicial" type="Marker2D" parent="." unique_id=990748893]
+position = Vector2(60, 114.5)
+
+[node name="ChaoEsquerda" type="StaticBody2D" parent="." unique_id=1128632865]
+position = Vector2(0, 160)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChaoEsquerda" unique_id=1136426447]
+position = Vector2(65, 20)
+shape = SubResource("RectangleShape2D_py3y8")
+
+[node name="Visual" type="ColorRect" parent="ChaoEsquerda" unique_id=1641074793]
+offset_right = 130.0
+offset_bottom = 40.0
+mouse_filter = 2
+color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="ChaoDireita" type="StaticBody2D" parent="." unique_id=919629030]
+position = Vector2(160, 160)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChaoDireita" unique_id=1888151775]
+position = Vector2(80, 20)
+shape = SubResource("RectangleShape2D_6pgwp")
+
+[node name="Visual" type="ColorRect" parent="ChaoDireita" unique_id=1440084196]
+offset_right = 160.0
+offset_bottom = 40.0
+mouse_filter = 2
+color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="PlataformaA" type="StaticBody2D" parent="." unique_id=626790653]
+position = Vector2(40, 120)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlataformaA" unique_id=1417253835]
+position = Vector2(20, 5)
+shape = SubResource("RectangleShape2D_1ys6m")
+
+[node name="Visual" type="ColorRect" parent="PlataformaA" unique_id=1687824541]
+offset_right = 40.0
+offset_bottom = 10.0
+mouse_filter = 2
+color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="PlataformaB" type="StaticBody2D" parent="." unique_id=1298081794]
+position = Vector2(190, 90)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlataformaB" unique_id=706615734]
+position = Vector2(20, 5)
+shape = SubResource("RectangleShape2D_i5xpt")
+
+[node name="Visual" type="ColorRect" parent="PlataformaB" unique_id=1401416392]
+offset_right = 40.0
+offset_bottom = 10.0
+mouse_filter = 2
+color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="Parede" type="StaticBody2D" parent="." unique_id=789929130]
+position = Vector2(290, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Parede" unique_id=1571127580]
+position = Vector2(5, 30)
+shape = SubResource("RectangleShape2D_g1i5j")
+
+[node name="Visual" type="ColorRect" parent="Parede" unique_id=197172575]
+offset_right = 10.0
+offset_bottom = 60.0
+mouse_filter = 2
+color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="Jogador" type="CharacterBody2D" parent="." unique_id=1842407644 instance=ExtResource("1_8ki4h")]
+position = Vector2(60, 114.5)

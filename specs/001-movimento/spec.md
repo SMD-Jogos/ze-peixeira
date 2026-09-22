@@ -22,6 +22,11 @@ O Zé corre para os lados com aceleração e desaceleração perceptíveis, cai 
 - D: RF-006 — cada fase define seu próprio ponto inicial e seu `limite_inferior_fase` (abaixo da borda inferior da tela visível). Como esses dois pontos são representados na cena é decisão do `/speckit.plan`, não desta spec.
 - D: RF-001 — o valor da zona morta (0,2) foi movido para a tabela de Afinação como campo `zona_morta`; o RF-001 passa a citar o campo em vez do valor literal.
 
+### Decisão do humano (revisão da T001) 2026-09-22
+
+- D: RF-007 — sem pulo (fatia 002), nenhuma plataforma seria alcançável e os Cenários 4 e 5 não seriam testáveis jogando. O ponto inicial fica sobre uma plataforma elevada, de onde o Zé sai andando e cai — o que torna os Cenários 4 e 5 testáveis sem pulo.
+- D: RF-008 — "apoiado no chão" inclui estar sobre uma plataforma (não só o chão da fase).
+
 ## Cenários de aceitação
 
 1. **Dado** o Zé parado no chão, **quando** o jogador segura `mover_direita`, **então** ele acelera até a velocidade máxima de corrida e a mantém enquanto a ação estiver pressionada.
@@ -48,8 +53,8 @@ O Zé corre para os lados com aceleração e desaceleração perceptíveis, cai 
 - **RF-004** A gravidade soma `gravidade × delta` à velocidade vertical a cada tick, até o limite `queda_max`.
 - **RF-005** A direção do olhar é o sinal da última entrada horizontal diferente de 0. No início, o Zé olha para a direita.
 - **RF-006** Cada fase define seu próprio ponto inicial e seu `limite_inferior_fase` (em pixels, no eixo y, abaixo da borda inferior da tela visível; propriedade da cena, não do `PlayerTuning`). Como esses dois pontos são representados na cena é decisão do plano, não desta spec. Ao cair abaixo de `limite_inferior_fase`, o Zé volta ao ponto inicial com velocidade zero e direção do olhar igual à direita (mesmo estado inicial do RF-005/RF-008).
-- **RF-007** Existe uma fase de teste com chão plano, duas plataformas em alturas diferentes, uma parede e um vão por onde se pode cair. A fase inteira cabe na tela de 320×180; a câmera não se move.
-- **RF-008** No início da fase, e sempre que o Zé reaparecer por efeito do RF-006, ele está parado, apoiado no chão e olhando para a direita.
+- **RF-007** Existe uma fase de teste com chão plano, duas plataformas em alturas diferentes, uma parede e um vão por onde se pode cair. A fase inteira cabe na tela de 320×180; a câmera não se move. O ponto inicial fica sobre uma plataforma elevada, de onde o Zé sai andando e cai — o que torna os Cenários 4 e 5 testáveis sem pulo (fatia 002).
+- **RF-008** No início da fase, e sempre que o Zé reaparecer por efeito do RF-006, ele está parado, apoiado no chão — o que inclui estar sobre uma plataforma, não só sobre o chão da fase — e olhando para a direita.
 
 ## Afinação (valores de partida)
 

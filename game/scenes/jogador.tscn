@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sa8d0"]
+size = Vector2(8, 11)
+
+[node name="Jogador" type="CharacterBody2D" unique_id=1842407644]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=407014129]
+shape = SubResource("RectangleShape2D_sa8d0")
+
+[node name="Visual" type="ColorRect" parent="." unique_id=655318980]
+offset_left = -4.0
+offset_top = -5.5
+offset_right = 4.0
+offset_bottom = 5.5
+mouse_filter = 2
+color = Color(0.15, 0.35, 0.95, 1)
