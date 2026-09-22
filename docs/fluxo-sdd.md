@@ -183,7 +183,7 @@ Depois de cada tarefa, o humano:
 
 2. Roda o jogo e testa com o controle na mão.
 3. Lê o diff inteiro (`git diff`) com o checklist `docs/checklists/revisao-tarefa.md`.
-4. Aceita ou rejeita. Aceitou: commit com a tarefa na mensagem (`T003: coyote time`). Rejeitou: descreve o problema ao agente e volta ao item 1.
+4. Aceita ou rejeita. Aceitou: commit e tag — mensagem com a tarefa (`T003: coyote time`) e, logo em seguida, `git tag -a fatiaNNN-TXXX -m "Fatia NNN, TXXX: <resumo>" <commit>` (ex.: `fatia001-T003`). A tag marca o estado do repositório exatamente ao final de cada tarefa aceita, útil para a aula (ver seção 12, `tools/aula/exportar_tarefas.sh`). Rejeitou: descreve o problema ao agente e volta ao item 1.
 
 Com um servidor MCP de Godot configurado, o agente pode rodar o projeto e ler os erros sozinho. Isso reduz as idas e vindas, mas **não substitui** os itens 2 e 3.
 
@@ -295,3 +295,19 @@ A tag `specs-v1` marca o estado do repositório antes da execução: só constit
 - **A spec envelhece** se as mudanças forem direto para o código. A disciplina do Passo 8 (regra nova volta para a spec) é o que a mantém viva.
 - **Custo.** Para uma mecânica pequena, constituição, spec e plano podem custar mais que o código. O método se paga à medida que as mecânicas interagem entre si: dash com espinhos, peixeira com parede, corte com peixeira arremessada.
 - **Revisar exige saber ler o código.** O checklist ajuda, mas não substitui entender GDScript e a API do Godot.
+
+## 12. Exportar tarefas para aula
+
+Cada tarefa aceita ganha uma tag `fatiaNNN-TXXX` (Passo 6, item 4). `tools/aula/exportar_tarefas.sh` usa essas tags para gerar, para cada uma, uma cópia jogável e independente do projeto naquele ponto exato — útil para mostrar em aula a evolução tarefa a tarefa, sem precisar trocar de branch ou de commit no repositório principal.
+
+```bash
+tools/aula/exportar_tarefas.sh [--forcar]
+```
+
+Para cada tag `fatia*-T*`, o script:
+
+1. Exporta o conteúdo da tag com `git archive` para `../ze-peixeira-aula/<tag>/` — **fora** do repositório (não versionado, não afeta o clone principal). Por padrão, não sobrescreve uma pasta já exportada; `--forcar` permite refazer.
+2. Na cópia exportada (nunca no repositório), muda `config/name` em `game/project.godot` para `"Zé Peixeira — <TXXX>"`, só para diferenciar as janelas do editor quando várias cópias estão abertas ao mesmo tempo.
+3. Ao final, lista as pastas criadas e lembra de importar o `game/project.godot` de cada uma no Godot.
+
+As pastas geradas não são commitadas em lugar nenhum: são material de apoio para a aula, descartável e regenerável a qualquer momento a partir das tags.
