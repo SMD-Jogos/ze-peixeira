@@ -54,12 +54,15 @@ for tag in "${TAGS[@]}"; do
     mkdir -p "$dest"
     git archive "$tag" | tar -x -C "$dest"
 
-    # Nome da tarefa (TXXX) a partir do nome da tag (fatiaNNN-TXXX)
+    # Fatia (NNN) e tarefa (TXXX) a partir do nome da tag (fatiaNNN-TXXX) —
+    # as tarefas recomeçam em T001 a cada fatia, então o nome precisa das duas.
+    prefixo_fatia="${tag%-*}"
     tarefa="${tag##*-}"
+    fatia_num="${prefixo_fatia#fatia}"
 
     project_file="$dest/game/project.godot"
     if [ -f "$project_file" ]; then
-        sed -i.bak "s|^config/name=.*|config/name=\"Zé Peixeira — ${tarefa}\"|" "$project_file"
+        sed -i.bak "s|^config/name=.*|config/name=\"Zé Peixeira — fatia ${fatia_num} · ${tarefa}\"|" "$project_file"
         rm -f "$project_file.bak"
     else
         echo "Aviso: '$project_file' não encontrado em '$tag' — config/name não alterado." >&2
