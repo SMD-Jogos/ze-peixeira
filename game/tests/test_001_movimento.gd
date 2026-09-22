@@ -65,3 +65,19 @@ func test_cs002_para_no_tick_6_sem_trocar_sinal():
 	assert_almost_eq(v, 6.667, 0.01, "tick 5 deve ser 6,667 px/s")
 	v = MovimentoHorizontal.atualizar_velocidade(v, 0, true, TICK, tuning)
 	assert_almost_eq(v, 0.0, 0.001, "tick 6 deve parar exatamente, sem trocar de sinal")
+
+# RF-004, CS-003
+
+func test_rf004_gravidade_acumula_por_tick():
+	var v := 0.0
+	v = Queda.atualizar_velocidade_vertical(v, TICK, tuning)
+	assert_almost_eq(v, 15.0, 0.001, "gravidade * delta no primeiro tick")
+	v = Queda.atualizar_velocidade_vertical(v, TICK, tuning)
+	assert_almost_eq(v, 30.0, 0.001, "acumula no segundo tick")
+
+func test_cs003_nunca_ultrapassa_queda_max():
+	var v := tuning.queda_max - 5.0
+	v = Queda.atualizar_velocidade_vertical(v, TICK, tuning)
+	assert_eq(v, tuning.queda_max, "clampeia no limite quando o incremento ultrapassaria")
+	v = Queda.atualizar_velocidade_vertical(v, TICK, tuning)
+	assert_eq(v, tuning.queda_max, "permanece no limite em queda livre prolongada")

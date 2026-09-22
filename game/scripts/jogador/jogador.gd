@@ -9,5 +9,6 @@ func _physics_process(delta: float) -> void:
 	var no_chao := is_on_floor()
 
 	velocity.x = MovimentoHorizontal.atualizar_velocidade(velocity.x, entrada, no_chao, delta, tuning)
+	velocity.y = Queda.atualizar_velocidade_vertical(velocity.y, delta, tuning)
 
 	move_and_slide()
