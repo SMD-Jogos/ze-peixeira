@@ -87,7 +87,15 @@ specify init --here --integration claude     # ou: --integration gemini
 
 O `init` cria `.specify/` (modelos e scripts) e os comandos do agente (`.claude/skills/` no Claude Code, `.gemini/commands/` no Gemini CLI). Ele **preserva** uma constituição existente em `.specify/memory/constitution.md`. Por isso, a constituição deste repositório não é sobrescrita.
 
-Em seguida, criar o projeto Godot dentro de `game/` e instalar o GUT pelo AssetLib.
+Em seguida, criar o projeto Godot dentro de `game/` e instalar o GUT. Pelo AssetLib funciona dentro do editor; na execução real desta demonstração, sem editor gráfico disponível, o addon foi obtido direto do repositório oficial, fixando a versão:
+
+```bash
+git clone --depth 1 --branch v9.7.1 https://github.com/bitwes/Gut.git /tmp/gut-src
+cp -R /tmp/gut-src/addons/gut game/addons/gut
+rm -rf /tmp/gut-src
+```
+
+Depois, ativar o plugin em **Project > Project Settings > Plugins** (ou, direto no `project.godot`, `[editor_plugins] enabled=PackedStringArray("res://addons/gut/plugin.cfg")`) e rodar `godot --headless --path game --import` uma vez para registrar as classes globais do GUT.
 
 **Conferir:** `git status` mostra só arquivos do Spec Kit e do projeto Godot. Fazer o commit desse estado inicial antes de qualquer código gerado.
 
@@ -103,10 +111,10 @@ Com o comando `/speckit.constitution`, o agente pode revisá-la e apontar lacuna
 
 Cada fatia tem uma `spec.md` escrita pelo humano em `specs/NNN-nome/`. A spec descreve o que o jogador vê e faz, nunca como implementar.
 
-Para que os comandos do Spec Kit trabalhem sobre uma spec já existente, é preciso indicar a fatia ativa **antes de abrir o agente**:
+Para que os comandos do Spec Kit trabalhem sobre uma spec já existente, é preciso indicar a fatia ativa **antes de abrir o agente**. Desde a v1.0.x, a fatia ativa é lida de `.specify/feature.json` (chave `feature_directory`) ou da variável de ambiente `SPECIFY_FEATURE_DIRECTORY` — não de `SPECIFY_FEATURE`, que só rotula a saída de alguns comandos e não seleciona nada (ver `.specify/scripts/bash/common.sh`, funções `get_current_branch` e `get_feature_paths`):
 
 ```bash
-export SPECIFY_FEATURE=001-movimento
+echo '{"feature_directory":"specs/001-movimento"}' > .specify/feature.json
 ```
 
 Depois, rodar `/speckit.clarify`. O agente faz até cinco perguntas sobre pontos ambíguos, e as respostas voltam para a spec.
@@ -184,7 +192,7 @@ Esses registros são o artefato mais importante do repositório. Sem eles, o pro
 ### Passo 9 — Próxima fatia
 
 ```bash
-export SPECIFY_FEATURE=002-pulo
+echo '{"feature_directory":"specs/002-pulo"}' > .specify/feature.json
 ```
 
 E repetir a partir do Passo 3.

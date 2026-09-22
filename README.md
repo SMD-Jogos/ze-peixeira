@@ -26,7 +26,7 @@ O fluxo foi **executado com o Claude Code** e pensado para ser independente do a
 | Godot | 4.7.2.stable.official |
 | Spec Kit (`specify`) | 1.0.10 |
 | GUT | 9.7.1 |
-| Agente e modelo | Claude Code, Sonnet 5 |
+| Agente e modelo | Claude Code, modelo Claude Sonnet 5 |
 
 ## Fatias
 

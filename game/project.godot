@@ -20,6 +20,10 @@ window/size/viewport_height=180
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+
 [input]
 
 mover_esquerda={

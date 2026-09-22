@@ -29,7 +29,18 @@ Regras válidas para todas as fatias. O agente não altera este arquivo. Mudanç
 
 2.3. **Afinação em dados.** Todo parâmetro numérico de movimento fica no recurso `PlayerTuning` (`game/scripts/data/player_tuning.gd`, com `class_name PlayerTuning`), instanciado em `game/data/player_tuning.tres` e exposto ao jogador por `@export`. Valores literais no código de movimento são proibidos, exceto 0 e 1.
 
-2.4. **Entrada por ações nomeadas.** Só se lê entrada por `Input` com as ações do mapa do projeto: `mover_esquerda`, `mover_direita`, `mover_cima`, `mover_baixo`, `pular`, `dash`, `arremessar`, `cortar`. Teclas ou botões diretos no código são proibidos. Cada ação tem mapeamento de teclado e de controle.
+2.4. **Entrada por ações nomeadas.** Só se lê entrada por `Input` com as ações do mapa do projeto: `mover_esquerda`, `mover_direita`, `mover_cima`, `mover_baixo`, `pular`, `dash`, `arremessar`, `cortar`. Teclas ou botões diretos no código são proibidos. Cada ação tem mapeamento de teclado e de controle, conforme a tabela abaixo (definida em `game/project.godot`):
+
+| Ação | Teclado | Controle |
+|---|---|---|
+| `mover_esquerda` | Seta esquerda | D-pad esquerda |
+| `mover_direita` | Seta direita | D-pad direita |
+| `mover_cima` | Seta cima | D-pad cima |
+| `mover_baixo` | Seta baixo | D-pad baixo |
+| `pular` | Espaço | Botão A (inferior) |
+| `dash` | Shift | Botão B (direito) |
+| `arremessar` | C | Botão X (esquerdo) |
+| `cortar` | V | Botão Y (superior) |
 
 2.5. **Comunicação por sinais.** Um objeto do mundo (espinho, mandacaru, peixeira) não chama métodos do jogador diretamente: emite sinais ou é detectado por `Area2D`. Isso é o padrão Observer.
 
