@@ -151,7 +151,7 @@ Rodar `/speckit.plan`. O agente gera `plan.md` (e, dependendo da fatia, `researc
 
 Se o plano falhar em algum item, a correção é pedida ao agente citando o item. Não se edita o plano à mão para "consertar rápido": a correção precisa ficar registrada.
 
-> **Registro da execução.** Problemas encontrados no plano e como foram corrigidos: ___
+> **Registro da execução.** Nenhuma violação de gate (Constitution Check) foi encontrada — a tabela de Complexity Tracking ficou vazia. A revisão humana do plano pediu 5 ajustes antes do commit, nenhum deles um gate falho: `quickstart.md` trocou "pular" por "sair andando" (Cenário 4 não usa pulo, fora do escopo desta fatia); explicitado que `DirecaoOlhar` recebe a entrada já discretizada por `EntradaHorizontal`, nunca o valor bruto; a "Estratégia de testes" passou a registrar `delta = 1/60` e tolerância (`assert_almost_eq`), exceto nos pontos exatos do tick 6; o cabeçalho foi corrigido para "Branch: main (sem branch por fatia)"; e a decisão de baixar o `deadzone` do `InputMap` para 0,0 (`research.md`, Decisão 1) foi registrada como decisão humana, não recomendação do agente.
 
 ### Passo 5 — Tarefas
 
@@ -162,6 +162,8 @@ Rodar `/speckit.tasks` para gerar `tasks.md` e, em seguida, `/speckit.analyze`. 
 - [ ] Cada tarefa termina com o jogo rodando ou com testes passando.
 - [ ] Cada tarefa cabe numa revisão (como referência, até cerca de 100 linhas alteradas).
 - [ ] Os testes de cada requisito vêm antes ou junto da implementação, nunca "no fim".
+
+> **Registro da execução.** `/speckit.tasks` gerou 10 tarefas (T001–T010) numa trilha linear, não organizada por "user story" — a spec desta fatia não tem essa estrutura (registrado na própria seção "Organização" de `tasks.md`). `/speckit.analyze`, em seguida, apontou 6 achados: E1 (ramo `corrida_reducao` do RF-002 sem teste) e E2 (caso-limite "ambas as direções pressionadas" sem teste) foram remediados na T003; B1 (RF-005 não testava "mantém direção com entrada 0") foi remediado na T007; C1 (nomenclatura `RegraRespawn`, anglicismo fora da constituição 5.4) resultou no rename para `RegraReaparecimento` na T008; F1 (dependência T006→T005 mais forte que o necessário) e B2 (adjetivo vago "perceptíveis" no Objetivo da spec) foram aceitos como estão, por decisão humana.
 
 ### Passo 6 — Implementar uma tarefa por vez
 
@@ -187,17 +189,23 @@ Depois de cada tarefa, o humano:
 
 Com um servidor MCP de Godot configurado, o agente pode rodar o projeto e ler os erros sozinho. Isso reduz as idas e vindas, mas **não substitui** os itens 2 e 3.
 
+> **Registro da execução.** T001–T008 implementadas uma por vez, cada uma commitada e tageada (`fatia001-T001` a `fatia001-T008`) depois de aprovação humana com o checklist de `docs/checklists/revisao-tarefa.md`. T009 (playtest) e T010 (conferência de CS-004) não geram tag própria — são revisão/playtest, sem diff de código. Sem servidor MCP de Godot configurado nesta execução: os itens 1 e 3 (testes, diff) foram automatizados via CLI headless. **O item 2 (controle na mão) foi dividido entre agente e humano**: o agente, no ambiente headless, não pôde testar com controle físico e usou simulações de input programáticas (sempre citadas nas respostas de cada tarefa) como substituto parcial; **o humano jogou e validou no editor** ao menos a T001 (tamanho da janela e posição inicial do Zé), a T003 (corrida e a saída da plataforma inicial sem gravidade ainda implementada) e as T005/T006 (queda e a taxa reduzida de movimento no ar) — é essa validação humana, não a simulação do agente, que de fato cobre o item 2 do Passo 6 para essas tarefas. Dois erros técnicos do próprio agente, corrigidos na hora, sem virar registro de revisão por serem só sintaxe: um erro de inferência de tipo do GDScript (`:=` com expressão booleana encadeada, T003) e um script de verificação que travou o processo (`quit()` logo após `root.add_child()`, T008).
+
 ### Passo 7 — Registro de revisão
 
 Toda tarefa em que o agente errou gera um registro em `docs/review/`, com base em `docs/review/_modelo.md`: o que foi pedido, o que veio, como o erro foi percebido e o que mudou (código, tarefa ou spec).
 
 Esses registros são o artefato mais importante do repositório. Sem eles, o processo parece não ter atrito, e o papel do humano desaparece.
 
+> **Registro da execução.** Cinco registros criados nesta fatia: `docs/review/000-P1-gut-plugin.md` (o agente diagnosticou um bug inexistente no GUT sem verificar quem referenciava o arquivo); `docs/review/000-P3-fatia-ativa.md` (o tutorial, escrito pelo humano, tinha uma instrução desatualizada sobre `SPECIFY_FEATURE` — erro do documento, não do agente); `docs/review/001-clarify-encerramento-precoce.md` (o agente encerrou o `/speckit.clarify` cedo demais e atribuiu essa decisão ao humano por engano); `docs/review/001-T001-plataformas-inalcancaveis.md` (a spec original não previa que, sem pulo, as plataformas ficariam inalcançáveis — ambiguidade da spec, não erro do agente — mais um erro de 0,5 px de posicionamento); `docs/review/001-T003-teste-vazio.md` (um teste do agente não exercitava de fato o comportamento que deveria cobrir).
+
 ### Passo 8 — Fechar a fatia
 
 1. Rodar `/speckit.converge`, que confere o código contra spec, plano e tarefas e acrescenta uma seção de convergência em `tasks.md`.
 2. Fazer o playtest. Um ajuste de sensação ("pulo curto demais") muda o `player_tuning.tres`. Um ajuste de regra ("deveria dar para pular na parede") **volta para a spec**, nunca direto para o código.
 3. Confirmar que todos os testes das fatias anteriores continuam passando.
+
+> **Registro da execução.** `/speckit.converge` encontrou 1 achado (F1, severidade HIGH, tipo `partial`): a orquestração de `fase.gd` (RF-006/RF-008) não tem teste de integração próprio, só a regra pura e o método `reaparecer()` isolados — tarefa `T011` acrescentada a `tasks.md` (Phase 5: Convergence), ainda não implementada. Playtest formal (os 9 passos de `quickstart.md`) entregue como checklist para o humano executar, não marcado como feito pelo agente. Testes automatizados: `16/16 passed` (15 de RF/CS + 1 de ambiente). Não há fatia anterior a esta (é a primeira da demonstração), então a constituição 4.4 ("testes de fatias anteriores continuam passando") ainda não teve chance de ser exercida.
 
 ### Passo 9 — Próxima fatia
 
