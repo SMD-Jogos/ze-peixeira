@@ -74,8 +74,12 @@ done
 
 echo ""
 echo "Pastas criadas:"
-for pasta in "${CRIADAS[@]}"; do
-    echo "  - $pasta"
-done
+if [ ${#CRIADAS[@]} -gt 0 ]; then
+    for pasta in "${CRIADAS[@]}"; do
+        echo "  - $pasta"
+    done
+else
+    echo "  (nenhuma — todas as pastas já existiam; use --forcar para regenerar)"
+fi
 echo ""
 echo "Para usar em aula: abra o Godot Engine, escolha 'Importar' e selecione o game/project.godot de cada pasta acima."
