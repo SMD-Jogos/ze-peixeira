@@ -82,4 +82,4 @@ Incremental, uma tarefa por vez, cada uma terminando com o jogo rodando e (a par
 
 ## Phase 5: Convergence
 
-- [ ] T011 Adicionar teste de integração de `fase.gd`: instanciar `fase_teste.tscn` (não só a regra pura nem `jogador.reaparecer()` isolado), confirmar que `_ready()` já posiciona o Zé no `PontoInicial`, e simular o Zé abaixo de `limite_inferior_fase` para confirmar que `_physics_process()` da fase de fato chama o reaparecimento real per RF-006/RF-008 (partial)
+- [x] T011 Adicionar teste de integração de `fase.gd`: instanciar `fase_teste.tscn` (não só a regra pura nem `jogador.reaparecer()` isolado), confirmar que `_ready()` já posiciona o Zé no `PontoInicial`, e simular o Zé abaixo de `limite_inferior_fase` para confirmar que `_physics_process()` da fase de fato chama o reaparecimento real per RF-006/RF-008 (partial)

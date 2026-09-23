@@ -127,3 +127,41 @@ func test_rf008_estado_apos_reaparecer_e_no_inicio():
 	assert_eq(jogador.velocity, Vector2.ZERO, "reaparecer zera a velocidade")
 	assert_eq(jogador.direcao_olhar, 1, "reaparecer reseta a direção para a direita")
 	assert_eq(jogador.global_position, posicao_alvo, "reaparecer aplica a posição recebida")
+
+# T011 (convergência, achado F1): integração real de fase.gd — não só a
+# regra pura nem reaparecer() isolado, mas a orquestração de fase_teste.tscn.
+
+func test_fase_posiciona_jogador_no_ready():
+	var fase_cena: PackedScene = load("res://scenes/fase_teste.tscn")
+	var fase: Node2D = fase_cena.instantiate()
+	var jogador: CharacterBody2D = fase.get_node("Jogador")
+	var ponto_inicial: Marker2D = fase.get_node("PontoInicial")
+
+	# Estado deliberadamente diferente do que a cena já traz por padrão —
+	# senão o teste passaria mesmo que _ready() nunca chamasse reaparecer(),
+	# só porque jogador.tscn já nasce posicionado sobre o PontoInicial.
+	jogador.global_position = Vector2.ZERO
+	jogador.velocity = Vector2(50.0, 50.0)
+	jogador.direcao_olhar = -1
+
+	add_child_autofree(fase)
+
+	assert_eq(jogador.global_position, ponto_inicial.global_position, "_ready() da fase posiciona o Zé no PontoInicial (RF-008)")
+	assert_eq(jogador.velocity, Vector2.ZERO, "_ready() da fase zera a velocidade")
+	assert_eq(jogador.direcao_olhar, 1, "_ready() da fase olha para a direita")
+
+func test_fase_reaparece_apos_tick_de_fisica_abaixo_do_limite():
+	var fase_cena: PackedScene = load("res://scenes/fase_teste.tscn")
+	var fase: Node2D = add_child_autofree(fase_cena.instantiate())
+	var jogador: CharacterBody2D = fase.get_node("Jogador")
+	var ponto_inicial: Marker2D = fase.get_node("PontoInicial")
+
+	jogador.global_position = Vector2(60.0, fase.limite_inferior_fase + 1.0)
+	jogador.velocity = Vector2(30.0, 160.0)
+	jogador.direcao_olhar = -1
+
+	fase._physics_process(TICK)
+
+	assert_eq(jogador.global_position, ponto_inicial.global_position, "abaixo do limite, reaparece após o tick de física da fase")
+	assert_eq(jogador.velocity, Vector2.ZERO, "reaparecer zera a velocidade")
+	assert_eq(jogador.direcao_olhar, 1, "reaparecer reseta a direção para a direita")
