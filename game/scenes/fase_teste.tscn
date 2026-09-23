@@ -1,6 +1,9 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/mundo/fase.gd" id="1_1ys6m"]
 [ext_resource type="PackedScene" path="res://scenes/jogador.tscn" id="1_8ki4h"]
+[ext_resource type="Script" path="res://scripts/jogador/jogador.gd" id="3_i5xpt"]
+[ext_resource type="Resource" path="res://data/player_tuning.tres" id="4_g1i5j"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_py3y8"]
 size = Vector2(130, 40)
@@ -18,6 +21,8 @@ size = Vector2(40, 10)
 size = Vector2(10, 60)
 
 [node name="FaseTeste" type="Node2D" unique_id=1821665528]
+script = ExtResource("1_1ys6m")
+limite_inferior_fase = 220.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=196667189]
 position = Vector2(160, 90)
@@ -92,3 +97,5 @@ color = Color(0.2, 0.2, 0.2, 1)
 
 [node name="Jogador" type="CharacterBody2D" parent="." unique_id=1842407644 instance=ExtResource("1_8ki4h")]
 position = Vector2(60, 114.5)
+script = ExtResource("3_i5xpt")
+tuning = ExtResource("4_g1i5j")

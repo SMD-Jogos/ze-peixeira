@@ -105,3 +105,25 @@ func test_cs003_nunca_ultrapassa_queda_max():
 	assert_eq(v, tuning.queda_max, "clampeia no limite quando o incremento ultrapassaria")
 	v = Queda.atualizar_velocidade_vertical(v, TICK, tuning)
 	assert_eq(v, tuning.queda_max, "permanece no limite em queda livre prolongada")
+
+# RF-006, RF-008
+
+func test_rf006_reaparece_abaixo_do_limite():
+	assert_true(RegraReaparecimento.deve_reaparecer(201.0, 200.0), "acima do limite (y maior) deve reaparecer")
+	assert_false(RegraReaparecimento.deve_reaparecer(200.0, 200.0), "exatamente no limite ainda não é 'abaixo'")
+	assert_false(RegraReaparecimento.deve_reaparecer(199.0, 200.0), "antes do limite não reaparece")
+
+func test_rf008_estado_apos_reaparecer_e_no_inicio():
+	var jogador_cena: PackedScene = load("res://scenes/jogador.tscn")
+	var jogador: CharacterBody2D = add_child_autofree(jogador_cena.instantiate())
+	jogador.tuning = tuning
+
+	jogador.velocity = Vector2(42.0, -13.0)
+	jogador.direcao_olhar = -1
+
+	var posicao_alvo := Vector2(60.0, 114.5)
+	jogador.reaparecer(posicao_alvo)
+
+	assert_eq(jogador.velocity, Vector2.ZERO, "reaparecer zera a velocidade")
+	assert_eq(jogador.direcao_olhar, 1, "reaparecer reseta a direção para a direita")
+	assert_eq(jogador.global_position, posicao_alvo, "reaparecer aplica a posição recebida")
