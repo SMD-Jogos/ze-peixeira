@@ -54,8 +54,8 @@
 
 ## Phase 4: Polish
 
-- [ ] T009 Rodar a validação manual completa de `quickstart.md` (os 9 passos, incluindo o Cenário 6 — colisão com parede — que não tem regra pura própria: é resolvido pelo `move_and_slide()` do motor contra o `StaticBody2D` da parede criado na T001).
-- [ ] T010 [P] Conferir CS-004: cada RF-001 a RF-008 tem ao menos um teste em `game/tests/test_001_movimento.gd` com o identificador no nome (checklist de revisão humana, `docs/checklists/revisao-tarefa.md`).
+- [x] T009 Rodar a validação manual completa de `quickstart.md` (os 9 passos, incluindo o Cenário 6 — colisão com parede — que não tem regra pura própria: é resolvido pelo `move_and_slide()` do motor contra o `StaticBody2D` da parede criado na T001). **Resultado do playtest humano (2026-09-22):** passos 1–8 confirmados, jogando. Passo 9 (zona morta do analógico) **não testado** — sem controle com analógico disponível no momento do playtest.
+- [x] T010 [P] Conferir CS-004: cada RF-001 a RF-008 tem ao menos um teste em `game/tests/test_001_movimento.gd` com o identificador no nome (checklist de revisão humana, `docs/checklists/revisao-tarefa.md`). Conferido: sem lacuna de nomenclatura; as duas lacunas de cobertura encontradas nesta conferência (integração de `fase.gd` sem teste próprio) foram remediadas na T011.
 
 ---
 

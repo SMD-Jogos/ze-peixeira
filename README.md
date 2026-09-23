@@ -32,7 +32,7 @@ O fluxo foi **executado com o Claude Code** e pensado para ser independente do a
 
 | Fatia | Mecânica | Status |
 |---|---|---|
-| 001-movimento | Corrida e gravidade | spec escrita |
+| 001-movimento | Corrida e gravidade | concluída |
 | 002-pulo | Altura variável, coyote time, jump buffer | spec escrita |
 | 003-maquina-de-estados | Refatoração para o padrão State | spec escrita |
 | 004-dash-gibao | Dash; o gibão protege dos espinhos | spec escrita |
