@@ -6,6 +6,12 @@
 
 O Zé dá um arranque curto e rápido em qualquer uma das 8 direções. Os espinhos da fase matam ao contato, mas durante o dash o **gibão de couro** protege: o Zé atravessa os espinhos enquanto o dash durar.
 
+## Clarifications
+
+### Decisão do humano (revisão) 2026-09-25
+
+- D: RF-007 — ao reaparecer, o Zé também volta a olhar para a direita (mesmo estado inicial da fatia 001, RF-005/RF-008).
+
 ## Cenários de aceitação
 
 1. **Dado** o Zé com o dash disponível, **quando** o jogador aperta `dash` segurando uma direção, **então** ele se desloca rápido nessa direção por um instante, sem sofrer gravidade.
@@ -24,7 +30,7 @@ O Zé dá um arranque curto e rápido em qualquer uma das 8 direções. Os espin
 - **RF-004** Ao terminar o dash, se a magnitude da velocidade for maior que `dash_velocidade_final`, ela é reduzida a esse valor, mantendo a direção. Depois disso valem as regras normais (001 e 002).
 - **RF-005** Há uma carga de dash. Ela é gasta ao iniciar o dash e restaurada quando o Zé está no chão **fora** do estado `Dash`.
 - **RF-006** Entre o início de um dash e o próximo há um intervalo mínimo de `dash_recarga` segundos, mesmo com carga disponível.
-- **RF-007** Espinhos são `Area2D`. O contato fora do estado `Dash` leva ao estado `Morto`: o Zé fica invisível e parado por `tempo_reaparecer` e volta no último ponto de reaparecimento, com velocidade zero e carga de dash restaurada. Cair abaixo do limite da fase (001, RF-006) passa a levar também ao estado `Morto`.
+- **RF-007** Espinhos são `Area2D`. O contato fora do estado `Dash` leva ao estado `Morto`: o Zé fica invisível e parado por `tempo_reaparecer` e volta no último ponto de reaparecimento, com velocidade zero, carga de dash restaurada e olhando para a direita (mesmo estado inicial da fatia 001, RF-005/RF-008). Cair abaixo do limite da fase (001, RF-006) passa a levar também ao estado `Morto`.
 - **RF-008** Ao morrer, o jogador emite o sinal `morreu`, e ao reaparecer, `reapareceu` (Observer). Outros objetos reagem a esses sinais, sem que o jogador os conheça.
 - **RF-009** Durante o estado `Dash`, o visual do Zé muda para a cor do gibão (marrom), indicando que a proteção está ativa.
 

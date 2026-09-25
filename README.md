@@ -11,6 +11,11 @@ Material complementar de **Programação para Jogos I** (SMD/UFC). Não é um jo
 3. **[specs/](specs/)**: uma pasta por fatia, cada uma com a especificação (escrita pelo humano) e, depois de executada, o plano e as tarefas (gerados pelo agente e revisados).
 4. **[docs/review/](docs/review/)**: o que o agente errou em cada tarefa e como o erro foi percebido.
 
+## Material da aula
+
+- **[docs/requisitos-tarefas-fatia001.docx](docs/requisitos-tarefas-fatia001.docx)**: requisitos, tarefas, testes e registros da fatia 001, para a turma.
+- As pastas por tarefa (`fatia001-T001` a `T008` e `T011`) são geradas com `tools/aula/exportar_tarefas.sh` em `../ze-peixeira-aula/` (depende das tags).
+
 O mesmo conteúdo, em formato de apostila: **[docs/apostila-sdd-ze-peixeira.docx](docs/apostila-sdd-ze-peixeira.docx)**, gerada por `tools/apostila/` a partir dos arquivos Markdown. Os arquivos Markdown são a fonte: a apostila é regenerada depois de cada mudança.
 
 **Para refazer o fluxo com outro agente**, parta da tag `specs-v1` (`git checkout specs-v1`): só constituição e specs, antes de qualquer código.
