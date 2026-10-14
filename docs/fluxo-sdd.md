@@ -263,11 +263,14 @@ A spec não muda. Mudam a constituição e, por consequência, o plano e as tare
 ```
 ze-peixeira/
 ├── README.md                        # o que é, versões usadas, por onde começar
+├── CLAUDE.md                        # orientações para o agente; aponta para constituição e fluxo
 ├── docs/
 │   ├── fluxo-sdd.md                 # este documento
+│   ├── STATUS.md                    # estado corrente, mantido pelo agente
 │   ├── apostila-sdd-ze-peixeira.docx  # este documento em formato de apostila
 │   ├── checklists/
 │   │   └── revisao-tarefa.md        # checklist usado em cada revisão de tarefa
+│   ├── revisao/                     # pareceres do revisor (diferente de review/, o registro didático)
 │   └── review/
 │       ├── _modelo.md               # modelo de registro de revisão
 │       └── NNN-TXXX-*.md            # registros reais, um por tarefa com problema
